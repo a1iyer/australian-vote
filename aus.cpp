@@ -18,8 +18,8 @@ public:
     std::list<int> candidate;
     void push_back (int x) { candidate.push_back (x); }
     void print (void) {
-        for (auto& c : candidate) std::cout << c << ',';
-        std::cout << '\n';
+        for (auto& c : candidate) std::cerr << c << ',';
+        std::cerr << '\n';
     }
 };
 
@@ -30,7 +30,7 @@ public:
     int votes = 0;
     std::list<Ballot *> ballot;
 
-    void print (void) { std::cout << name << ": " << votes << '\n'; }
+    void print (void) { std::cerr << name << ": " << votes << '\n'; }
     void init (const std::string& s) { name = s; }
     void increment (void) { votes++; }
     void eliminate (void) { eliminated = true; }
@@ -40,7 +40,6 @@ class Case {
 public:
     std::vector<Candidate> candidate;
     std::list<Ballot> ballot;
-    int threshold = 0;
 
     void print (void);
     void count (void);
@@ -56,9 +55,8 @@ void Case::print (void)
 
 void Case::count (void)
 {
-    int min = INT_MAX, max = INT_MIN;
-    int winner = INT_MAX;
-    threshold = ballot.size() / 2 + 1;
+    int min, max, winner;
+    int threshold = ballot.size() / 2 + 1;
 
     // Initial count of all ballots
     for (auto& b : ballot) {
@@ -70,7 +68,11 @@ void Case::count (void)
 
     for (int x = 0; x < 20; x++) {
 
-        if (verbose) std::cout << "Count round " << x << '\n';
+        if (verbose) std::cerr << "Count round " << x << '\n';
+
+        min = INT_MAX;
+        max = INT_MIN;
+        winner = INT_MAX;
 
         // Find the winner and the loser
         int i = 0;
@@ -100,23 +102,33 @@ void Case::count (void)
             }
             return;
         } else {
-            // Need to eliminate all with the min count
-            for (auto c = candidate.begin(); c != candidate.end(); c++) {
-                if ((*c).votes == min) {
-                    if (verbose) std::cout << "Eliminating " << (*c).name << '\n';
-                    (*c).eliminated = true;
-                    for (auto& b : (*c).ballot) {
-                        // b is a Ballot *
-                        int c_new;
-                        do {
-                            (*b).candidate.pop_front();
-                            c_new = (*b).candidate.front();
-                        } while (candidate[c_new-1].eliminated == true);
-                        candidate[c_new-1].increment();
-                        candidate[c_new-1].ballot.push_back (b);
+            // Mark min candidates for elimination
+            std::vector<Candidate *> elimination_list;
+            for (auto& c : candidate) {
+                if (c.votes == min && c.eliminated == false) {
+                    if (verbose) std::cerr << "Eliminating " << c.name << '\n';
+                    c.eliminated = true;
+                    elimination_list.push_back (&c);
+                }
+            }
+
+            // Reassign votes from min candidates
+            for (Candidate * c : elimination_list) {
+                for (Ballot * b : c->ballot) {
+                    int c_new;
+                    do {
+                        b->candidate.pop_front();
+                        c_new = b->candidate.front();
+                    } while (candidate[c_new-1].eliminated == true);
+                    candidate[c_new-1].increment();
+                    candidate[c_new-1].ballot.push_back (b);
+                    if (verbose) {
+                        std::cerr << "Assigning from " << c->name << " to " <<
+                            candidate[c_new-1].name << '\n';
                     }
                 }
             }
+            elimination_list.clear();
         }
     }
 }
@@ -138,7 +150,7 @@ int main (int argc, char * argv[])
     getline (cin, l);
     s.str (l);
     s >> num_cases;
-    if (verbose) cout << num_cases << " cases\n";
+    if (verbose) cerr << num_cases << " cases\n";
     getline (cin, l); // blank
     mycase = new Case [num_cases];
 
@@ -152,7 +164,7 @@ int main (int argc, char * argv[])
         getline (cin, l);
         s.clear(); s.str (l);
         s >> num_candidates;
-        if (verbose) cout << num_candidates << " candidates\n";
+        if (verbose) cerr << num_candidates << " candidates\n";
         candidate = new Candidate[num_candidates];
         for (int j = 0; j < num_candidates; j++) {
             getline (cin, l);
@@ -161,7 +173,7 @@ int main (int argc, char * argv[])
         }
         if (verbose) 
             for (int q = 0; q < num_candidates; q++) 
-                cout << candidate[q].name << '\n';
+                cerr << candidate[q].name << '\n';
 
         // Read ballots
         ballot = new Ballot[1000];
@@ -176,14 +188,14 @@ int main (int argc, char * argv[])
             if (verbose) ballot[ballot_count].print();
             mycase[c].ballot.push_back (ballot[ballot_count]);
         }
-        if (verbose) cout << ballot_count << " ballots\n";
-        if (verbose) cout << "End of case\n";
+        if (verbose) cerr << ballot_count << " ballots\n";
 
         mycase[c].count();
 
-        delete[] ballot;
-        delete[] candidate;
+        // delete[] ballot;
+        // delete[] candidate;
 
+        if (verbose) cerr << "End of case\n";
         if (c != num_cases - 1) std::cout << "\n";
     }
 
