@@ -6,30 +6,17 @@
 //
 
 #include <iostream>
+#include <utility>
 
-#define TEN 0,0,0,0,0,0,0,0,0,0,
-#define HUN TEN TEN TEN TEN TEN TEN TEN TEN TEN TEN
-#define THOU HUN HUN HUN HUN HUN HUN HUN HUN HUN HUN
-#define FOURTHOU THOU THOU THOU THOU
-
-int cache[4000] = { FOURTHOU };
+int cache[4000];
 bool case3 = true;
-int n = 0, a = 0, b = 0, c = 0;
+int n, a, b, c;
 
 using namespace std;
 
-inline void swap_to_ascending (int& x, int& y)
-{
-    if (x > y) {
-        int temp = x;
-        x = y;
-        y = temp;
-    }
-}
-
 int depth (int x)
 {
-    int d_a = 0, d_b = 0, d_c = 0;
+    int d_a, d_b, d_c;
 
     if (x == 0) return 0;
     if (x < 0) return -2;
@@ -44,11 +31,7 @@ int depth (int x)
     if (d_b > max) max = d_b;
     if (case3) if (d_c > max) max = d_c;
 
-    if (max >= 0) {
-        max++;
-    } else {
-        max = -1;
-    }
+    if (max >= 0) max++;
     cache[x] = max;
     return max;
 }
@@ -58,17 +41,15 @@ int main (int argc, char * argv[])
     cin >> n >> a >> b >> c;
 
     // Sort and sift
-    swap_to_ascending (a, b);
-    swap_to_ascending (b, c);
-    swap_to_ascending (a, b);
-    if (a == b) {
+    if (a > b) swap (a, b);
+    if (b > c) swap (b, c);
+    if (a > b) swap (a, b);
+    if ((a == b) || (b == c)) {
         b = c;
-        case3 = false;
-    } else if (b == c) {
         case3 = false;
     }
 
-    // Optimization for the trivial case
+    // Trivial case
     int theoretical_max = n / a;
     if ((theoretical_max * a) == n) {
         std::cout << theoretical_max << '\n';
