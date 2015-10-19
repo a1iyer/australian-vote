@@ -1,12 +1,12 @@
 CC := g++
 CFLAGS := -std=c++11 -Wall
 
-all: aus
+all: aus.exe
 
-aus: aus.cpp
+aus.exe: aus.cpp
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	@rm aus
+	@rm aus.exe
 
 # vim:set noexpandtab:
