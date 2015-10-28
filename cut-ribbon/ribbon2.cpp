@@ -44,10 +44,12 @@ int main (int argc, char * argv[])
     if (a > b) swap (a, b);
     if (b > c) swap (b, c);
     if (a > b) swap (a, b);
-    if ((a == b) || (b == c)) {
+    if (a == b) {
         b = c;
         case3 = false;
     }
+    if ((c > n) || (b == c))
+        case3 = false;
 
     // Trivial case
     int theoretical_max = n / a;
