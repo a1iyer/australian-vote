@@ -1,5 +1,5 @@
 //
-// coach.cpp
+// coach_rel.cpp
 // Anoop Iyer, Nov 2015
 // Solution to the coach problem in the SARC OOPL class
 // http://codeforces.com/contest/300/problem/B/
@@ -13,15 +13,13 @@ using namespace std;
 struct Team {
     int member[3] = {0, 0, 0};
     bool add (int p) {
-        if (member[0] == 0)
-            member[0] = p;
-        else if (member[1] == 0)
-            member[1] = p;
-        else if (member[2] == 0)
-            member[2] = p;
-        else
-            return false;
-        return true;
+        for (int i = 0; i < 3; i++) {
+            if (member[i] == 0) {
+                member[i] = p;
+                return true;
+            }
+        }
+        return false;
     }
     void print (void) {
         cout << member[0] << ' ' << member[1] << ' ' << member[2] << '\n';
@@ -30,46 +28,44 @@ struct Team {
 
 int main (int argc, char * argv[])
 {
-    int n = 0;
-    int m = 0;
+    int n = 0, m = 0, t = 1;
+    bool failed = false;
 
     cin >> n >> m;
     int num_teams = n/3;
 
     vector<Team> team (num_teams+1);
-    vector<int> player (n+1, 0);
+    vector<int> teamof (n+1, 0);
 
-    int t = 1;
-    bool failed = false;
     for (int i = 0; i < m; i++) {
         int p1, p2;
         cin >> p1 >> p2;
 
-        if (player[p1] != 0) {
-            if (player[p2] == player[p1]) {
+        if (teamof[p1] != 0) {
+            if (teamof[p2] == teamof[p1]) {
                 continue;
-            } else if (player[p2] == 0) {
-                player[p2] = player[p1];
-                if (team[player[p1]].add (p2) == false) {
+            } else if (teamof[p2] == 0) {
+                teamof[p2] = teamof[p1];
+                if (team[teamof[p1]].add (p2) == false) {
                     failed = true; break;
                 }
             } else {
                 failed = true; break;
             }
-        } else if (player[p2] != 0) {
-            if (player[p1] == player[p2]) {
+        } else if (teamof[p2] != 0) {
+            if (teamof[p1] == teamof[p2]) {
                 continue;
-            } else if (player[p1] == 0) {
-                player[p1] = player[p2];
-                if (team[player[p2]].add (p1) == false) {
+            } else if (teamof[p1] == 0) {
+                teamof[p1] = teamof[p2];
+                if (team[teamof[p2]].add (p1) == false) {
                     failed = true; break;
                 }
             } else {
                 failed = true; break;
             }
         } else if (t <= num_teams) {
-            player[p1] = t;
-            player[p2] = t;
+            teamof[p1] = t;
+            teamof[p2] = t;
             team[t].add (p1);
             team[t].add (p2);
             t++;
@@ -82,14 +78,12 @@ int main (int argc, char * argv[])
         cout << "-1\n";
     } else {
         t = 1;
-        for (int i = 1; i <= n; i++) {
-            if (player[i] == 0) {
-                while (team[t].add (i) == false) t++;
+        for (int p = 1; p <= n; p++) {
+            if (teamof[p] == 0) {
+                while (team[t].add (p) == false) t++;
             }
         }
-        for (int i = 1; i <= num_teams; i++) {
-           team[i].print();
-        }
+        for (t = 1; t <= num_teams; t++) team[t].print();
     }
     return 0;
 }
