@@ -31,9 +31,6 @@ int main (int argc, char * argv[])
     Team team [num_teams];
     vector<int> teamof (n+1, -1);
 
-    for (i = 0; i < m; i++) {
-        cin >> p1 >> p2;
-
 #define EXECUTE(x,y) {                                          \
             if (teamof[x] == teamof[y]) continue;               \
             else if (teamof[x] == -1) {                         \
@@ -41,6 +38,8 @@ int main (int argc, char * argv[])
             } else break;                                       \
         }
 
+    for (i = 0; i < m; i++) {
+        cin >> p1 >> p2;
         if (teamof[p1] != -1) EXECUTE (p2, p1)
         else if (teamof[p2] != -1) EXECUTE (p1, p2)
         else if (t < num_teams) team[teamof[p1] = teamof[p2] = t++].add (p1, p2);
