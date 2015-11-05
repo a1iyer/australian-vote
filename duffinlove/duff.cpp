@@ -4,71 +4,47 @@
 
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 
-vector<unsigned long long> prime;
-
-inline unsigned int approxsqrt (int i)
-{
-    float x = (float) i;
-    x = sqrt (i);
-    return 1 + (unsigned int) x;
-}
-
-void expandprime (int n)
+void expandprime (int n, vector<unsigned long long>& p)
 {
     int count = 0;
-    unsigned long long i = 2+prime.back();
+    unsigned long long i = 2+p.back(), j=0;
     bool composite = false;
     while (count < n) {
-        unsigned int j = 0;
         composite = false;
-        for (j = 0; (j < prime.size()) && (prime[j] < approxsqrt(i)); j++) {
-            if (i % prime[j] == 0) {
+        for (j = 0; (p[j] * p[j] < i) && (!composite); j++)
+            if (i % p[j] == 0)
                 composite = true;
-                break;
-            }
-        }
-        if (!composite) {
-            prime.push_back (i);
-            ++count;
-        }
+        if (!composite) p.push_back (i), ++count;
         i += 2;
     }
 }
 
 int main (int argc, char * argv[])
 {
-    unsigned long long n;
+    unsigned long long n=0, result=1, i=0;
     vector<unsigned long long> divisor;
+    vector<unsigned long long> p;
 
     cin >> n;
-
-    prime.push_back (2l);
-    prime.push_back (3l);
-    expandprime (1000);
-
-    unsigned int i = 0;
+    p.push_back (2l);
+    p.push_back (3l);
+    expandprime (2000, p);
     while (n != 1) {
-        if (n % prime[i] == 0l) {
-            divisor.push_back (prime[i]);
-            while (n % prime[i] == 0l) n /= prime[i];
+        if (n % p[i] == 0l) {
+            divisor.push_back (p[i]);
+            do n /= p[i]; while (n % p[i] == 0l);
         }
         i++;
-
-        if (prime[i] * prime[i] > n) {
+        if (p[i] * p[i] > n) {
             divisor.push_back (n);
             break;
         }
-
-        if (i == prime.size()) expandprime(1000);
+        if (i == p.size()) expandprime (1000, p);
     }
-
-    unsigned long long result = 1;
     for (auto x : divisor) result *= x;
     cout << result << endl;
-
     return 0;
 }
