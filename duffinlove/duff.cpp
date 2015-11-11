@@ -14,7 +14,7 @@ void expandprime (int n, vector<unsigned long long>& p)
     bool composite = false;
     while (count < n) {
         composite = false;
-        for (j = 0; (p[j] * p[j] < i) && (!composite); j++)
+        for (j = 1; (p[j] * p[j] < i) && (!composite); j++)
             if (i % p[j] == 0)
                 composite = true;
         if (!composite) p.push_back (i), ++count;
@@ -26,12 +26,9 @@ int main (int argc, char * argv[])
 {
     unsigned long long n=0, result=1, i=0;
     vector<unsigned long long> divisor;
-    vector<unsigned long long> p;
+    vector<unsigned long long> p {2, 3, 5, 7};
 
     cin >> n;
-    p.push_back (2l);
-    p.push_back (3l);
-    expandprime (2000, p);
     while (n != 1) {
         if (n % p[i] == 0l) {
             divisor.push_back (p[i]);
