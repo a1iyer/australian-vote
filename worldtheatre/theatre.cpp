@@ -13,7 +13,7 @@ num_t C (num_t n, num_t k)
     if (k > (n+1) / 2) k = n-k;
     for (num_t i = 0; i != k; i++) {
         r *= n-i;
-        r /= (i+1);
+        r /= i+1;
     }
     return r;
 }
