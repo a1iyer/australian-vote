@@ -1,30 +1,20 @@
-// theatre.cpp
-// Anoop Iyer, Nov 2015
-// http://codeforces.com/problemset/problem/131/C/
+// theatre.cpp | Anoop Iyer, Nov 2015 | http://codeforces.com/problemset/problem/131/C/
 
 #include <iostream>
 
-using namespace std;
-using num_t = long long;
-
-num_t C (num_t n, num_t k)
+inline long long C (long long n, long long k)
 {
-    num_t r=1;
+    long long r=1, i=0;
     if (k > (n+1) / 2) k = n-k;
-    for (num_t i = 0; i != k; i++) {
-        r *= n-i;
-        r /= i+1;
-    }
+    for (i = 0; i != k; i++) r = (r * (n-i)) / (i+1);
     return r;
 }
 
-int main (int argc, char * argv[])
+int main ()
 {
-    num_t n=0, m=0, t=0, result=0;
-
-    cin >> n >> m >> t;
-    for (num_t b = max<num_t> (4, t-m); b <= t - max<num_t> (1, t-n); b++) 
-        result += C (n, b) * C (m, t - b);
-    cout << result << '\n';
-    return 0;
+    long long n=0, m=0, t=0, result=0, b=0;
+    std::cin >> n >> m >> t;
+    for (b = std::max (4ll, t-m); b <= t - std::max (1ll, t-n); b++) 
+        result += C (n, b) * C (m, t-b);
+    std::cout << result << '\n';
 }
