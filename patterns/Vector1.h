@@ -1,6 +1,6 @@
 // Vector1.h
-// aiyer 2016-09-16
-// SARC-OOPL assignment on 2016-09-15; (incomplete) implementation of my_vector
+// aiyer and balexander 2016-09-16
+// SARC-OOPL assignment on 2016-09-15; partial implementation of my_vector
 
 #ifndef VECTOR1_H
 #define VECTOR1_H
