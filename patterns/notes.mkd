@@ -1,0 +1,15 @@
+# C++ Design Patterns Class #
+
+## Four types of cast in C++ ##
+
+* static\_cast
+* const\_cast
+* dynamic\_cast
+* reinterpret\_cast
+
+## Rule of 3 ##
+
+The copy constructor, copy assignment operator and the destructor are all connected. It is unusual to have to muck with one without mucking with all 3.
+
+
+
