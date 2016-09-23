@@ -1,6 +1,8 @@
+// Vector3.h
+// aiyer, 2016-09-22 C++ OOPL class assignment. Based on Glenn's Vector2.h.
 
-#ifndef Vector_h
-#define Vector_h
+#ifndef VECTOR3_H
+#define VECTOR3_H
 
 #include <algorithm>
 #include <cstddef>
@@ -58,12 +60,18 @@ class my_vector {
 
         using allocator_type  = A;
 
+    // The ordering of these member variables is very important. If _a is
+    // declared after _b and _e, then gcc-4.8 generates warnings for the
+    // constructors' initialization order.
+
     private:
         allocator_type _a;
         pointer _b;
         pointer _e;
 
     public:
+        // The explicit keyword here keeps this constructor from being an
+        // implicit type converter.
         explicit my_vector (size_type s = 0,
                             const_reference v = T(),
                             const allocator_type& a = allocator_type()) :
@@ -90,11 +98,15 @@ class my_vector {
 
         ~my_vector () { _a.deallocate(_b, size()); }
 
+        // The initializer-list constructor first calls the simple constructor
+        // with the size argument, then invokes std::copy.
+
         my_vector(std::initializer_list<T> t) : my_vector(t.size()) {
             std::copy(t.begin(), t.end(), _b);
         }
 
-        // Four de-reference operators
+        // Four de-reference operators; two of them just call the other two with
+        // modified const-ness.
         reference operator [] (size_type i) { return _b[i]; }
 
         const_reference operator [] (size_type i) const {
@@ -118,4 +130,4 @@ class my_vector {
         size_type size () const { return _e - _b; }
 };
 
-#endif // Vector_h
+#endif // VECTOR3_H
