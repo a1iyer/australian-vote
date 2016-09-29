@@ -11,7 +11,10 @@
 #include <stdexcept>
 #include <utility>
 
-using namespace std::rel_ops;
+using std::rel_ops::operator!=;
+using std::rel_ops::operator<=;
+using std::rel_ops::operator>;
+using std::rel_ops::operator>=;
 
 template <typename T, typename A = std::allocator<T>>
 class my_vector {
@@ -23,24 +26,6 @@ class my_vector {
         if (lhs.size() < rhs.size()) return true;
         for (auto i = 0; i < rhs.size(); i++) if (lhs[i] < rhs[i]) return true;
         return false;
-    }
-
-    // The following four functions should go away if std::rel_ops worked, but
-    // for some reason it doesn't work.
-    friend bool operator!= (const my_vector& lhs, const my_vector& rhs) {
-        return !(lhs == rhs);
-    }
-
-    friend bool operator <= (const my_vector& lhs, const my_vector& rhs) {
-        return !(rhs < lhs);
-    }
-
-    friend bool operator > (const my_vector& lhs, const my_vector& rhs) {
-        return (rhs < lhs);
-    }
-
-    friend bool operator >= (const my_vector& lhs, const my_vector& rhs) {
-        return !(lhs < rhs);
     }
 
     public:
