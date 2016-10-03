@@ -12,4 +12,10 @@
 The copy constructor, copy assignment operator and the destructor are all connected. It is unusual to have to muck with one without mucking with all 3.
 
 
+## operator new ##
 
+In C++, operator new is the equivalent of malloc. Not to be confused with new.
+
+## move ##
+
+All move() does is that it convinces the compiler that it's an r-value.
