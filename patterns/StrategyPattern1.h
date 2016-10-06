@@ -4,22 +4,25 @@
 #include <string>
 
 class Movie {
+public:
+    enum MovieType {
+        Childrens,
+        NewRelease,
+        Regular
+    };
+
 private:
     std::string _s;
-    int _t;
+    MovieType _t;
     int _d;
 
 public:
-    static const int Childrens = 0;
-    static const int NewRelease = 1;
-    static const int Regular = 2;
-
-    Movie (const std::string& s, int t, int d) :
+    Movie (const std::string& s, MovieType t, int d) :
         _s (s),
         _t (t),
         _d (d) { }
 
-    int amount (void) {
+    int amount (void) const {
         int retval = 2;
         switch (_t) {
         case Childrens:
